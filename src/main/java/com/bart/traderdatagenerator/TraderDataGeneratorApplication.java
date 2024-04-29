@@ -3,6 +3,9 @@ package com.bart.traderdatagenerator;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -14,23 +17,17 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 public class TraderDataGeneratorApplication {
 
 	public static void main(String[] args) {
+		var task = new KafkaTask(new KafkaProducer<>(getKafkaProperties()));
+		task.run();
+	}
+
+	private static Properties getKafkaProperties() {
 		Properties properties = new Properties();
 		properties.setProperty("bootstrap.servers","kafka-1:9092");
 		properties.setProperty("key.serializer", StringSerializer.class.getName());
 
-		properties.setProperty("value.serializer",JsonSerializer.class.getName());
-
-		KafkaProducer<String, DataStructure> producer = new KafkaProducer<>(properties);
-
-		var valueToTransfer = new DataStructure(Date.from(Instant.now()), "100");
-		
-		ProducerRecord<String, DataStructure> record = new ProducerRecord<>("gold", valueToTransfer);
-
-		producer.send(record);
-
-		producer.flush();
-
-		producer.close();
+		properties.setProperty("value.serializer", JsonSerializer.class.getName());
+		return properties;
 	}
 
 }

@@ -11,7 +11,7 @@
 	<groupId>com.bart</groupId>
 	<artifactId>trader-data-producer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>trader-data-generator</name>
+	<name>trader-data-producer</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
